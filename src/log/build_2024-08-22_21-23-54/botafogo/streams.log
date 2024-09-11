@@ -1,0 +1,18 @@
+[1.190s] Invoking command in '/home/robot/ws_aprendendo_ros2/src/build/botafogo': PYTHONPATH=/home/robot/ws_aprendendo_ros2/src/build/botafogo/prefix_override:/home/robot/ws_aprendendo_ros2/src/install/botafogo/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 setup.py develop --editable --build-directory /home/robot/ws_aprendendo_ros2/src/build/botafogo/build --no-deps install_data
+[1.650s] running develop
+[1.893s] running egg_info
+[1.894s] writing botafogo.egg-info/PKG-INFO
+[1.895s] writing dependency_links to botafogo.egg-info/dependency_links.txt
+[1.896s] writing entry points to botafogo.egg-info/entry_points.txt
+[1.899s] writing requirements to botafogo.egg-info/requires.txt
+[1.902s] writing top-level names to botafogo.egg-info/top_level.txt
+[1.903s] reading manifest file 'botafogo.egg-info/SOURCES.txt'
+[1.905s] writing manifest file 'botafogo.egg-info/SOURCES.txt'
+[1.925s] running build_ext
+[1.926s] Creating /home/robot/ws_aprendendo_ros2/src/install/botafogo/lib/python3.10/site-packages/botafogo.egg-link (link to .)
+[1.928s] Installing almada script to /home/robot/ws_aprendendo_ros2/src/install/botafogo/lib/botafogo
+[1.930s] Installing savarino script to /home/robot/ws_aprendendo_ros2/src/install/botafogo/lib/botafogo
+[1.932s] 
+[1.932s] Installed /home/robot/ws_aprendendo_ros2/src/build/botafogo
+[1.932s] running install_data
+[1.990s] Invoked command in '/home/robot/ws_aprendendo_ros2/src/build/botafogo' returned '0': PYTHONPATH=/home/robot/ws_aprendendo_ros2/src/build/botafogo/prefix_override:/home/robot/ws_aprendendo_ros2/src/install/botafogo/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 setup.py develop --editable --build-directory /home/robot/ws_aprendendo_ros2/src/build/botafogo/build --no-deps install_data

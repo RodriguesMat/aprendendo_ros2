@@ -1,0 +1,21 @@
+running develop
+running egg_info
+creating botafogo.egg-info
+writing botafogo.egg-info/PKG-INFO
+writing dependency_links to botafogo.egg-info/dependency_links.txt
+writing entry points to botafogo.egg-info/entry_points.txt
+writing requirements to botafogo.egg-info/requires.txt
+writing top-level names to botafogo.egg-info/top_level.txt
+writing manifest file 'botafogo.egg-info/SOURCES.txt'
+reading manifest file 'botafogo.egg-info/SOURCES.txt'
+writing manifest file 'botafogo.egg-info/SOURCES.txt'
+running build_ext
+Creating /home/robot/ws_aprendendo_ros2/src/install/botafogo/lib/python3.10/site-packages/botafogo.egg-link (link to .)
+
+Installed /home/robot/ws_aprendendo_ros2/src/build/botafogo
+running install_data
+creating /home/robot/ws_aprendendo_ros2/src/install/botafogo/share/ament_index
+creating /home/robot/ws_aprendendo_ros2/src/install/botafogo/share/ament_index/resource_index
+creating /home/robot/ws_aprendendo_ros2/src/install/botafogo/share/ament_index/resource_index/packages
+copying resource/botafogo -> /home/robot/ws_aprendendo_ros2/src/install/botafogo/share/ament_index/resource_index/packages
+copying package.xml -> /home/robot/ws_aprendendo_ros2/src/install/botafogo/share/botafogo

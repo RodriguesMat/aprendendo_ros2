@@ -1,0 +1,15 @@
+package.xml
+setup.cfg
+setup.py
+botafogo/__init__.py
+botafogo/almada.py
+botafogo/savarino.py
+botafogo.egg-info/PKG-INFO
+botafogo.egg-info/SOURCES.txt
+botafogo.egg-info/dependency_links.txt
+botafogo.egg-info/entry_points.txt
+botafogo.egg-info/requires.txt
+botafogo.egg-info/top_level.txt
+botafogo.egg-info/zip-safe
+launch/tiquinho.py
+resource/botafogo

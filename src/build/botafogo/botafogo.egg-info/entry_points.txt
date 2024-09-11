@@ -1,0 +1,4 @@
+[console_scripts]
+almada = botafogo.almada:main
+savarino = botafogo.savarino:main
+
