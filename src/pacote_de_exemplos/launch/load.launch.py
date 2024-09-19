@@ -114,16 +114,16 @@ def generate_launch_description():
             '--ros-args', '--log-level', LaunchConfiguration('log_level')]
     )
 
-    # robot_localization_node = Node(
-    #      package='robot_localization',
-    #      executable='ekf_node',
-    #      name='ekf_filter_node',
-    #      parameters=[
-    #          [get_package_share_directory('pacote_de_exemplos'), '/config/nav/ekf.yaml'], 
-    #          {'use_sim_time': LaunchConfiguration('use_sim_time')}
-    #     ],
-    #     arguments=['--ros-args', '--log-level', LaunchConfiguration('log_level')]
-    # )
+    robot_localization_node = Node(
+        package='robot_localization',
+        executable='ekf_node',
+        name='ekf_filter_node',
+        parameters=[
+            [get_package_share_directory('pacote_de_exemplos'), '/config/nav/ekf.yaml'], 
+            {'use_sim_time': LaunchConfiguration('use_sim_time')}
+        ],
+        arguments=['--ros-args', '--log-level', LaunchConfiguration('log_level')]
+    )
     
     return LaunchDescription([
         declare_namespace_cmd,
@@ -136,7 +136,7 @@ def generate_launch_description():
         # joint_state_publisher_gui_node,
         robot_state_publisher_node,
         spawn_entity,
-        # robot_localization_node,
+        robot_localization_node,
         rviz_node,
         teleop
     ])

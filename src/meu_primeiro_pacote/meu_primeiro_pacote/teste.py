@@ -1,10 +1,13 @@
 import rclpy
 import numpy 
+import time
 from rclpy.node import Node
 
 from sensor_msgs.msg import LaserScan
 from nav_msgs.msg import Odometry
-from geometry_msgs.msg import Twist, Vector3
+from geometry_msgs.msg import Twist, Vector3, PoseStamped
+from rclpy.duration import Duration
+from robot_navigator import BasicNavigator, NavigationResult
 
 from rclpy.qos import QoSProfile, QoSReliabilityPolicy
 
@@ -47,10 +50,59 @@ class R2D2(Node):
         rclpy.spin_once(self)
 
         self.get_logger().info ('Entrando no loop princial do nó.')
+
+        goal_pose.header.frame_id = 'map'
+        goal_pose.header.stamp = navigator.get_clock().now().to_msg()
+        goal_pose.pose.position.x = 9.0
+        goal_pose.pose.position.y = 9.0
+        goal_pose.pose.position.z = 0.0
+        goal_pose.pose.orientation.x = 0.0
+        goal_pose.pose.orientation.y = 0.0
+        goal_pose.pose.orientation.z = 0.0
+        goal_pose.pose.orientation.w = 1.0
+        navigator.goToPose(goal_pose)
+ 
+        i = 0
+ 
+  # Keep doing stuff as long as the robot is moving towards the goal
+        while not navigator.isNavComplete():
+    ################################################
+    #
+    # Implement some code here for your application!
+    #
+    ################################################
+ 
+    # Do something with the feedback
+            i = i + 1
+            feedback = navigator.getFeedback()
+            if feedback and i % 5 == 0:
+                print('Distance remaining: ' + '{:.2f}'.format(
+                    feedback.distance_remaining) + ' meters.')
+ 
+      # Some navigation timeout to demo cancellation
+            if Duration.from_msg(feedback.navigation_time) > Duration(seconds=600.0):
+                navigator.cancelNav()
+ 
+      # Some navigation request change to demo preemption
+            if Duration.from_msg(feedback.navigation_time) > Duration(seconds=120.0):
+                goal_pose.pose.position.x = -3.0
+                navigator.goToPose(goal_pose)
+ 
+  # Do something depending on the return code
+            result = navigator.getResult()
+            if result == NavigationResult.SUCCEEDED:
+                print('Goal succeeded!')
+            elif result == NavigationResult.CANCELED:
+                print('Goal was canceled!')
+            elif result == NavigationResult.FAILED:
+                print('Goal failed!')
+            else:
+                print('Goal has an invalid return status!')
+
         integral = 0.0
         while(rclpy.ok):
             rclpy.spin_once(self)
-            distancia_objetivo = 2
+            distancia_objetivo = 0.5
             distancia_direita = numpy.mean(self.laser[0:10])
             distancia_frente = numpy.mean(self.laser[80:100])
             def wall():
@@ -101,6 +153,13 @@ class R2D2(Node):
 def main(args=None):
     rclpy.init(args=args)
     node = R2D2()
+    navigator = BasicNavigator()
+    navigator.waitUntilNav2Active()
+    goal_pose = PoseStamped() 
+  # Shut down the ROS 2 Navigation Stack
+    navigator.lifecycleShutdown()
+ 
+    exit(0)
     try:
         node.run()
         node.destroy_node()
