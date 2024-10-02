@@ -1,7 +1,7 @@
 import rclpy
 import numpy 
 import tf_transformations
-from math import *
+import math
 import time 
 from rclpy.node import Node
 
@@ -12,6 +12,11 @@ from geometry_msgs.msg import Twist, Vector3
 from rclpy.qos import QoSProfile, QoSReliabilityPolicy
 
 class vhf_teste(Node):
+
+    self.espera(0.5)
+    self.dr2d2 = 0.0
+    self.angulo_robo = 0.0
+    self.distancia = 0.0
 
     def __init__(self):
         super().__init__('vhf_teste')
@@ -29,11 +34,6 @@ class vhf_teste(Node):
 
         self.get_logger().debug ('Definindo o publisher de controle do robo: "/cmd_Vel"')
         self.pub_cmd_vel = self.create_publisher(Twist, '/cmd_vel', 10)
-
-        self.espera(0.5)
-        self.dr2d2 = 0.0
-        self.angulo_robo = 0.0
-        self.distancia = 0.0
 
     def listener_callback_laser(self, msg):
         self.laser = msg.ranges
