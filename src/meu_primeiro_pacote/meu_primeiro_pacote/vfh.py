@@ -89,7 +89,7 @@ class vfh(Node):
                 if(abs(self.erro_ang) >= 0.06):
                     cmd.angular.z = 0.4
                     self.pub_cmd_vel.publish(cmd)
-                    self.get_logger().info ('TENTANDO VIRAR PRO 99 CALMA')
+                    self.get_logger().info ('Calculando a rota')
                 elif(self.rota <= 3 and abs(self.erro_ang) <= 0.06):
                     self.situacao = 2                
                 else:
@@ -99,25 +99,23 @@ class vfh(Node):
                     self.situacao = 1
         
             elif self.situacao == 1:  # sem obstáculos, reto
-                self.get_logger().info ('estado = 1')
                 if(self.distancia_frente > self.distancia_direita and self.distancia_frente > self.distancia_esquerda and self.distancia_frente > 1):
-                    self.get_logger().info ('frente mais livre')
+                    self.get_logger().info ('rota a frente mais livre')
                     self.situacao = 2
                 elif(self.distancia_esquerda > self.distancia_direita and self.distancia_esquerda > self.distancia_frente):
                     cmd.angular.z = 0.5
-                    self.get_logger().info ('frente não é a mais livre ainda, virando esquerda')
+                    self.get_logger().info ('trocando a rota para a esquerda')
                     self.pub_cmd_vel.publish(cmd)
                 elif(self.distancia_direita > self.distancia_frente and self.distancia_direita > self.distancia_esquerda):
                     cmd.angular.z = -0.5
-                    self.get_logger().info ('frente não é a mais livre ainda, virando direita')
+                    self.get_logger().info ('trocando a rota para a direita')
                     self.pub_cmd_vel.publish(cmd)
                 else:
                     cmd.angular.z = 0.5
                     self.pub_cmd_vel.publish(cmd)
-                    self.get_logger().info ('NÃO SEI O QUE FAZER ESTOU APENAS GIRANDO!!!!!')
+                    self.get_logger().info ('recalculando')
 
             elif self.situacao == 2:  # com obstáculos
-                self.get_logger().info ('estado = 2, andando')
                 cmd.linear.x = 0.5
                 self.pub_cmd_vel.publish(cmd)
                 self.get_logger().debug ("Distância para o obstáculo " + str(self.distancia_frente))
@@ -125,15 +123,15 @@ class vfh(Node):
                 if(self.rota <= 3 and self.rota >= 1 and abs(self.erro_ang) <= 0.06):
                     cmd.linear.x = 0.5
                     self.pub_cmd_vel.publish(cmd)
-                    self.get_logger().info ('TO INDO CALMA')
+                    self.get_logger().info ('Chegando')
                 elif (self.distancia_frente < self.distancia_direita and self.distancia_frente < self.distancia_esquerda or self.distancia_frente < 1):
-                    self.get_logger().info ('frente com obstáculos')
+                    self.get_logger().info ('frente com acidente')
                     self.situacao = 0
                 if(self.rota <= 0.8):
                     cmd.angular.z = 0.0
                     cmd.linear.x = 0.0
                     self.pub_cmd_vel.publish(cmd)
-                    self.get_logger().info ('CHEGOUUUUU')
+                    self.get_logger().info ('Chegou ao seu destino')
                     self.pub_cmd_vel.publish(self.parar)
                     break
 
