@@ -27,8 +27,7 @@ setup(
             'listener = meu_primeiro_pacote.listener:main',
             'r2d2 = meu_primeiro_pacote.r2d2:main',
             'r2d2_controle = meu_primeiro_pacote.r2d2_controle:main',
-            'vhf_teste = meu_primeiro_pacote.vhf_teste:main',
-            'teste = meu_primeiro_pacote.teste:main'
+            'vfh = meu_primeiro_pacote.vfh:main'
         ],
     },
 )
