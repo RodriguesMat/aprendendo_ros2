@@ -27,6 +27,7 @@ setup(
             'listener = meu_primeiro_pacote.listener:main',
             'r2d2 = meu_primeiro_pacote.r2d2:main',
             'r2d2_controle = meu_primeiro_pacote.r2d2_controle:main',
+            'wavefront = meu_primeiro_pacote.wavefront:main',
             'vfh = meu_primeiro_pacote.vfh:main'
         ],
     },
