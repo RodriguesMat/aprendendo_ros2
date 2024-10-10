@@ -6,7 +6,7 @@ linhas = 400
 colunas = 400
 
 class Path:
-    def _init_(self, x, y):
+    def __init__(self, x, y):
         self.x = x
         self.y = y
 
