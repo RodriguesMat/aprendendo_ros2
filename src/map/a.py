@@ -18,7 +18,7 @@ start = (x_inicio, y_inicio)
 path = [Path(start[0], start[1])]   
 
 #Montando a matriz obstaculo
-pgmf = open('map.pgm', 'rb')
+pgmf = open('my_map_fixed.pgm', 'rb')
 matrix = plt.imread(pgmf)
 print (matrix)
 
@@ -40,7 +40,7 @@ matriz_obstaculo = [[0] * 400 for _ in range(400)] # 0 par vazio, 40000000 para 
 matriz_f = [[0] * 400 for _ in range(400)] #Soma de g + h + obstaculo
 matriz_caminho = [[" "] * 400 for _ in range(400)] #Para poder observar o caminho gerado
 
-#FUNÇÕED PRA CHAMAR NA MAIN
+#FUNÇÕES PRA CHAMAR NA MAIN
 
 def calcular_adjacentes(x_atual, y_atual):
     for i in range(max(0, x_atual - 1), min(400, x_atual + 2)):
@@ -99,7 +99,7 @@ def menor_valor(matriz_f, x_atual, y_atual, x_final, y_final):
 
 
 
-#MAAAAAAAAAAAAAIN
+#main
 
 x_atual = x_inicio
 y_atual = y_inicio
@@ -107,10 +107,6 @@ qtd = 0
 
 while not(x_atual== x_final and y_atual == y_final):
     matriz_caminho[x_atual][y_atual] = "█"
-    # print("x_atual é:",x_atual)
-    # print("y_atual é:",y_atual)
-    # for linha in matriz_caminho:
-    #     print(linha)
     qtd += 1
     calcular_adjacentes(x_atual,y_atual)
     calcular_diagonais(x_atual,y_atual)
@@ -132,13 +128,3 @@ for cell in path:
     plt.scatter(x=cell.x, y=cell.y, c='r', s=5)
 plt.show()
     
-    
-#CASO QUEIRA VER EM PRINT NO TERMINAL  
-    
-# print("--------------------------------------------------------------------------------------------")
-# print("CHEGUEI!!!!!!!!!!!!!!!!! ")
-# print("x_atual é:",x_atual)
-# print("y_atual é:",y_atual)
-# print("Quantidade de passos até o final:", qtd)
-# for linha in matriz_caminho:
-#     print(linha)
