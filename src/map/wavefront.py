@@ -1,99 +1,108 @@
-from collections import deque
+import numpy as np
 from matplotlib import pyplot as plt
 
-# Tamanho da matriz
-linhas = 400
-colunas = 400
-
-class Path:
-    def __init__(self, x, y):
-        self.x = x
-        self.y = y
-
-#Pontos de inicio e fim
-x_inicio = 10
-y_inicio = 10
-
-x_final = 50
-y_final = 50
-
-goal = (x_final, y_final)
-start = (x_inicio, y_inicio)
-path = [Path(start[0], start[1])]   
-
-caminho_aberto = 1
-obstaculo = 0
-
-# Montando matrix do fafa
-pgmf = open('my_map_fixed.pgm', 'rb')
-matrix = plt.imread(pgmf)
-
-matrix = (1.0 * (matrix > 220))
-
-# Inicializa a matriz com zeros
-matriz = [[0] * colunas for _ in range(linhas)]
-matriz_caminho = [[0] * colunas for _ in range(linhas)]
-
-matriz[x_final][y_final] = 2
-matriz[x_inicio][y_inicio] = 1
-
-# Fila para a busca em largura
-fila = deque([(x_final, y_final)])
-
-# Wavefront
-while fila:
-    x, y = fila.popleft()
-    for dx in range(-1, 2):
-        for dy in range(-1, 2):
-            i, j = x + dx, y + dy
-            if 0 <= i < linhas and 0 <= j < colunas and matriz[i][j] == 0:
-                matriz[i][j] = matriz[x][y] + 1
-                fila.append((i, j))
-            if (i, j) == (x_inicio, y_inicio):
-                fila.clear()  # Limpa a fila para encerrar o loop   
-                break  # Sai do loop for interno
-        else:
-            continue  # Continua o loop while sem executar o else
-        break  # Sai do loop for externo se o ponto inicial foi alcançado
-
-# Para garantir que a célula inicial permaneça com o valor 1
-matriz[x_final][y_final] = 2
-matriz[x_inicio][y_inicio] = 1
-
-x_atual, y_atual = x_inicio, y_inicio
-def menor_valor(x_atual, y_atual, x_final, y_final,matriz):
-    menor_valor = float('inf')
-    prox_x, prox_y = x_atual, y_atual
+def wavefront(matriz, objetivo):
+    linhas, colunas = matriz.shape
+    # Cria um campo de onda inicializado com infinito
+    campo_onda = np.full((linhas, colunas), np.inf)
     
-    for dx in range(-1, 2):
-        for dy in range(-1, 2):
-            novo_x = x_atual + dx
-            novo_y = y_atual + dy
-            if (dx, dy) != (0, 0) and 0 <= novo_x < linhas and 0 <= novo_y < colunas and matriz[novo_x][novo_y] > 0:  #and matrix{novo_x}[novo_y] == caminho_aberto
-                valor = matriz[novo_x][novo_y]
-                if valor < menor_valor:
-                    menor_valor = valor
-                    prox_x, prox_y = novo_x, novo_y
-                if (novo_x, novo_y) == (x_final, y_final):
-                    return novo_x, novo_y  # Return the goal coordinates directly
-    
-    return prox_x, prox_y
+    # Define a posição do objetivo com valor zero
+    campo_onda[objetivo] = 0
+    lista_processamento = [objetivo]  # Lista de células a processar
 
+    # Direções de movimentação (cima, baixo, esquerda, direita)
+    direcoes = [(-1, 0), (1, 0), (0, -1), (0, 1)]
 
-matriz[x_inicio][y_inicio] = float('inf')
-while not(x_atual== x_final and y_atual == y_final):
-    pros_x,pros_y = menor_valor(x_atual, y_atual, x_final, y_final,matriz)
-    matriz_caminho[pros_x][pros_y] = "*"
-    x_atual = pros_x
-    y_atual = pros_y
-    path.append(Path(x_atual,y_atual))
-    
-    
-# Extract path coordinates ensuring they are within the matrix boundaries
-path_x = [min(max(cell.x, 0), linhas - 1) for cell in path]
-path_y = [min(max(cell.y, 0), colunas - 1) for cell in path]
+    # Processa as células enquanto houver
+    while lista_processamento:
+        atual = lista_processamento.pop(0)  # Pega a próxima célula
+        valor_atual = campo_onda[atual]  # Valor atual da célula
 
-# Visualize the path
-plt.imshow(matrix, interpolation='nearest', cmap='gray') 
-plt.plot(path_y, path_x, color='yellow', linewidth=2)
+        # Verifica as células vizinhas
+        for direcao in direcoes:
+            vizinho = (atual[0] + direcao[0], atual[1] + direcao[1])
+            
+            # Verifica se o vizinho está dentro dos limites e é um espaço livre
+            if (0 <= vizinho[0] < linhas) and (0 <= vizinho[1] < colunas) and matriz[vizinho] == 1:
+                # Atualiza o valor do vizinho se for menor
+                if campo_onda[vizinho] > valor_atual + 1:
+                    campo_onda[vizinho] = valor_atual + 1  # Aumenta a distância
+                    lista_processamento.append(vizinho)  # Adiciona à lista para processar
+
+    return campo_onda  # Retorna o campo de onda
+
+# Função para encontrar o caminho mais curto
+def caminho_mais_curto(campo_onda, inicio, objetivo):
+    caminho = [inicio]  # Inicia o caminho com a posição inicial
+    atual = inicio  # Célula atual
+    # Direções possíveis para movimentação
+    direcoes = [(-1, 0), (1, 0), (0, -1), (0, 1)]
+    
+    # Continua até não haver mais células a processar
+    while True:
+        valor_minimo = np.inf  # Inicializa o valor mínimo
+        proxima_celula = None  # Próxima célula a ser escolhida
+        
+        # Verifica as células vizinhas
+        for direcao in direcoes:
+            vizinho = (atual[0] + direcao[0], atual[1] + direcao[1])
+            # Verifica se o vizinho está dentro dos limites
+            if (0 <= vizinho[0] < campo_onda.shape[0] and
+                0 <= vizinho[1] < campo_onda.shape[1]):
+                
+                # Verifica se o vizinho é um espaço livre
+                if matriz[vizinho] == 1:  # Apenas considera células livres
+                    # Verifica se o vizinho tem o menor valor
+                    if campo_onda[vizinho] < valor_minimo:
+                        # Verifica se o vizinho está na direção do objetivo
+                        if verifica_direcao_objetivo(vizinho, objetivo, atual):
+                            valor_minimo = campo_onda[vizinho]  # Atualiza o valor mínimo
+                            proxima_celula = vizinho  # Define a próxima célula
+
+        # Se não houver próxima célula ou se for um obstáculo, encerra o laço
+        if proxima_celula is None or campo_onda[proxima_celula] == np.inf:
+            break  # Não há mais caminho
+
+        caminho.append(proxima_celula)  # Adiciona ao caminho
+        atual = proxima_celula  # Atualiza a célula atual
+        
+        # Se o robô alcançou o objetivo, encerra
+        if campo_onda[atual] == 0:  # Alcançou o objetivo
+            break
+
+    return caminho  # Retorna o caminho encontrado
+
+def verifica_direcao_objetivo(vizinho, objetivo, atual):
+    # Calcula a direção para o objetivo
+    direcao_objetivo = (objetivo[0] - atual[0], objetivo[1] - atual[1])
+    direcao_vizinho = (vizinho[0] - atual[0], vizinho[1] - atual[1])
+    
+    # Verifica se o vizinho está mais próximo da direção do objetivo
+    return (direcao_objetivo[0] * direcao_vizinho[0] >= 0 and
+            direcao_objetivo[1] * direcao_vizinho[1] >= 0)
+
+# Carrega o mapa
+with open('my_map_fixed.pgm', 'rb') as pgmf: 
+    matriz = plt.imread(pgmf)
+
+# Converte a matriz para um formato binário
+matriz = 1.0 * (matriz > 250)  # 0 = obstáculo (preto), 1 = livre (branco)
+
+# Define o objetivo e a posição inicial do robô
+goal = (40, 80) 
+inicio = (370, 50)  
+
+# Executa o algoritmo de campo de onda
+campo_onda = wavefront(matriz, goal)
+
+# Encontra o caminho mais curto
+caminho = caminho_mais_curto(campo_onda, inicio, goal)
+
+# Marca o caminho encontrado no mapa
+for celula in caminho:
+    matriz[celula] = 0.5  # Marca o caminho no mapa
+
+# Exibe o resultado
+plt.imshow(matriz, interpolation='nearest', cmap='hot')
+plt.title("Wavefront")
 plt.show()
