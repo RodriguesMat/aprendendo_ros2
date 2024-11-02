@@ -11,7 +11,7 @@ with open('my_map_fixed.pgm', 'rb') as pgmf:
 # Criando uma cópia da imagem com base em um threshold
 image = 1.0 * (img > 240)
 
-# Definindo os pontos goal e posição do robô
+# Definindo os pontos de objetivo e do robô
 goal = (90, 15)
 robot_pos = (25, 300)
 
@@ -89,10 +89,6 @@ while True:
 for (ponto1, ponto2) in caminho_correto:
     cv2.line(image, ponto1[::-1], ponto2[::-1], (255, 0, 0), 1)
 
-# Exibindo a imagem final
-fig = plt.figure()
-fig.canvas.manager.set_window_title('Árvore Aleatória de Exploração Rápida (RRT)')
-
 plt.imshow(image)
-plt.title('Trajeto Calculado')
+plt.title('Árvore Aleatória de Exploração Rápida (RRT)')
 plt.show()
